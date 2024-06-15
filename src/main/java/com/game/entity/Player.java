@@ -14,31 +14,32 @@ import java.util.Date;
 @Builder
 @Entity
 @Table(name = "player", schema = "rpg")
+@NamedQuery(name = "get_players", query = "select count(*) from Player ")
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 12)
+    @Column(nullable = false, length = 12)
     private String name;
 
-    @Column(name = "title", nullable = false, length = 30)
+    @Column(nullable = false, length = 30)
     private String title;
 
-    @Column(name = "race", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
     private Race race;
 
-    @Column(name = "profession", nullable = false)
+    @Column(nullable = false)
     private Profession profession;
 
-    @Column(name = "birthday", nullable = false)
+    @Column(nullable = false)
     private Date birthday;
 
-    @Column(name = "banned", nullable = false)
+    @Column(nullable = false)
     private Boolean banned;
 
-    @Column(name = "level", nullable = false)
+    @Column(nullable = false)
     private Integer level;
 
     /*public Player() {
