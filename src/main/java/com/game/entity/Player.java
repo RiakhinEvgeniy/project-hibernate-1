@@ -1,9 +1,17 @@
 package com.game.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "player", schema = "rpg")
 public class Player {
@@ -33,7 +41,7 @@ public class Player {
     @Column(name = "level", nullable = false)
     private Integer level;
 
-    public Player() {
+    /*public Player() {
     }
 
     public Player(Long id, String name, String title, Race race, Profession profession, Date birthday, Boolean banned, Integer level) {
@@ -109,5 +117,5 @@ public class Player {
 
     public void setLevel(Integer level) {
         this.level = level;
-    }
+    }*/
 }
