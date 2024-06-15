@@ -47,9 +47,7 @@ public class PlayerRepositoryDB implements IPlayerRepository {
         Transaction tx = session.getTransaction();
         try {
             tx.begin();
-
             session.save(player);
-
             tx.commit();
         } catch (Exception e) {
             if (tx.getStatus() == TransactionStatus.ACTIVE || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK) {
@@ -63,12 +61,28 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @Override
     public Player update(Player player) {
-        return null;
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        try {
+            tx.begin();
+            session.update(player);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.getStatus() == TransactionStatus.ACTIVE || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+                tx.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return player;
     }
 
     @Override
     public Optional<Player> findById(long id) {
-        return Optional.empty();
+        try (Session session = sessionFactory.openSession()) {
+            Player player = session.get(Player.class, id);
+            return Optional.of(player);
+        }
     }
 
     @Override
