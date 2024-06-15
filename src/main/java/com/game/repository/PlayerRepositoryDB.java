@@ -87,7 +87,19 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @Override
     public void delete(Player player) {
-
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        try {
+            tx.begin();
+            session.delete(player);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.getStatus() == TransactionStatus.ACTIVE || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+                tx.rollback();
+            }
+        } finally {
+            session.close();
+        }
     }
 
     @PreDestroy
