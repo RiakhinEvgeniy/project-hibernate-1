@@ -3,9 +3,11 @@ package com.game.repository;
 import com.game.entity.Player;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PreDestroy;
@@ -41,7 +43,22 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @Override
     public Player save(Player player) {
-        return null;
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        try {
+            tx.begin();
+
+            session.save(player);
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.getStatus() == TransactionStatus.ACTIVE || tx.getStatus() == TransactionStatus.MARKED_ROLLBACK) {
+                tx.rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return player;
     }
 
     @Override
@@ -61,6 +78,6 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @PreDestroy
     public void beforeStop() {
-
+        sessionFactory.close();
     }
 }

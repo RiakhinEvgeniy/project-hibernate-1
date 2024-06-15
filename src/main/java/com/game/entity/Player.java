@@ -18,6 +18,7 @@ import java.util.Date;
 public class Player {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 12)
